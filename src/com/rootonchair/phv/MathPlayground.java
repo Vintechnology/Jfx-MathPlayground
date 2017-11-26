@@ -15,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -37,14 +38,15 @@ public class MathPlayground extends Application {
     public void start(Stage primaryStage) {
         interpret=new EquationInterpret("0","x",0);
         
-        StackPane canvasRoot=new StackPane();
+        HBox canvasRoot=new HBox();
         final CoordinateCanvas canvas=new CoordinateCanvas(420,420);
         canvasRoot.getChildren().add(canvas);
+        canvasRoot.setId("canvas_pane");
         
         final TextField equationField=new TextField();
-        Text topText=new Text("Welcome to Math Playground");
-        topText.setFont(Font.font("monospace",FontWeight.MEDIUM,FontPosture.REGULAR,20));
-        Text equationText=new Text("Equation:");
+        Label topText=new Label("Welcome to Math Playground");
+        topText.setId("top_text");
+        Label equationText=new Label("Equation:");
         
         HBox buttonPane=new HBox();
         buttonPane.setAlignment(Pos.CENTER_RIGHT);
@@ -85,6 +87,7 @@ public class MathPlayground extends Application {
         
         
         Scene scene=new Scene(root);
+        scene.getStylesheets().add(MathPlayground.class.getResource("MathPlayground.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle("Math Playground");
         primaryStage.sizeToScene();
