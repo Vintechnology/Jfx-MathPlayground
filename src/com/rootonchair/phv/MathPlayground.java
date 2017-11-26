@@ -6,6 +6,10 @@
 package com.rootonchair.phv;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -27,14 +31,17 @@ import javafx.stage.Stage;
  * @author user
  */
 public class MathPlayground extends Application {
+    private EquationInterpret interpret;
     
     @Override
     public void start(Stage primaryStage) {
+        interpret=new EquationInterpret("0","x",0);
+        
         StackPane canvasRoot=new StackPane();
-        CoordinateCanvas canvas=new CoordinateCanvas(420,420);
+        final CoordinateCanvas canvas=new CoordinateCanvas(420,420);
         canvasRoot.getChildren().add(canvas);
         
-        TextField equationField=new TextField();
+        final TextField equationField=new TextField();
         Text topText=new Text("Welcome to Math Playground");
         topText.setFont(Font.font("monospace",FontWeight.MEDIUM,FontPosture.REGULAR,20));
         Text equationText=new Text("Equation:");
@@ -43,7 +50,20 @@ public class MathPlayground extends Application {
         buttonPane.setAlignment(Pos.CENTER_RIGHT);
         buttonPane.setSpacing(10);
         Button okButton=new Button("OK");
+        okButton.setOnAction((ActionEvent event)->{
+            String src=equationField.getText();
+            interpret.setSource(src);
+            for(int i=-100;i<=100;i++){
+                double x= i/10d;
+                double y=interpret.applyVariable(x);
+                
+                canvas.drawDot(x, y);
+            }
+        });
         Button resetButton=new Button("Reset");
+        resetButton.setOnAction((ActionEvent event)->{
+            canvas.reset();
+        });
         buttonPane.getChildren().addAll(okButton,resetButton);
              
         GridPane controlPane=new GridPane();
