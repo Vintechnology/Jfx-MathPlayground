@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EquationInterpret {
-    private static final int INFINITY=1000
-                            ,MINUS_INFINITY=-1000;
     private int pos=-1,ch;
     private String src,orgSrc;
     private final Map<String,Double> map;
     private final String keyBind;
+    private double variable;
     public EquationInterpret(String src,String keyBind,double defaultValue){
 	this.orgSrc=src;
 	this.keyBind=keyBind;
 	this.map=new HashMap<>();
 	map.put(keyBind, defaultValue);
+        variable=defaultValue;
     }
     public void setSource(String newSrc){
 	if(newSrc!=null && !newSrc.equals(orgSrc))
@@ -25,6 +25,7 @@ public class EquationInterpret {
         return parse();
     }
     private void replaceVariable(){
+        variable=map.get(keyBind);
 	src=orgSrc.replace(keyBind, "("+String.valueOf(map.get(keyBind)+")"));
     }
     private void nextChar(){
@@ -70,7 +71,9 @@ public class EquationInterpret {
                 x*=parseFactor();
             else if(eat('/')){
                 double dividedFactor=parseFactor();
-                
+                if(dividedFactor==0){
+                    //todo handle divided to zero
+                }
                 x/=dividedFactor;// may cause divided by zero
             }
             else
