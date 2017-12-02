@@ -9,6 +9,7 @@ public class EquationInterpret {
     private final Map<String,Double> map;
     private final String keyBind;
     private double variable;
+    private boolean isPositive;
     public EquationInterpret(String src,String keyBind,double defaultValue){
 	this.orgSrc=src;
 	this.keyBind=keyBind;
@@ -48,8 +49,16 @@ public class EquationInterpret {
 	if(ch==-1)
             return 0;
 	double x= parseExpression();
-	if(this.pos<src.length()) throw new RuntimeException("Unexpected character "+(char)ch);
-            return x;
+	if(this.pos<src.length()) 
+            throw new RuntimeException("Unexpected character "+(char)ch);
+        if(!Double.isInfinite(x)){
+            isPositive = Double.compare(x, 0d)>=0;
+        }
+        return x;
+    }
+    
+    public boolean isInPositive(){
+        return isPositive;
     }
 	
     private double parseExpression(){
