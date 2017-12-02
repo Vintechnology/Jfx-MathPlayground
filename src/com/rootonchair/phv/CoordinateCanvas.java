@@ -20,7 +20,11 @@ public class CoordinateCanvas extends Canvas {
     }
     
     private void drawBackground(){
+        
         GraphicsContext gc=getGraphicsContext2D();
+        
+        gc.restore();
+        
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvasWidth, canvasHeight);
         gc.setStroke(Color.WHITE);
@@ -56,12 +60,31 @@ public class CoordinateCanvas extends Canvas {
        gc.setTextAlign(TextAlignment.LEFT);
        gc.setTextBaseline(VPos.TOP);
        gc.strokeText("0", halfWidth+LINE_WIDTH/2d, halfHeight);
+       
+       gc.save();
     }
     
     public void drawDot(double x, double y){
         GraphicsContext gc= getGraphicsContext2D();
         gc.setFill(Color.RED);
         gc.fillOval(canvasWidth/2d+x*SPACING-POINT_RADIUS/2d, canvasHeight/2d+y*(-SPACING)-POINT_RADIUS/2d, POINT_RADIUS, POINT_RADIUS);
+    }
+    
+    public void drawHorizontalAsymtotic(double y){
+        GraphicsContext gc=getGraphicsContext2D();
+        gc.setStroke(Color.YELLOW);
+        //y=MathUtils.round(y, 1);
+        double scaledY=canvasHeight/2d+y*(-SPACING);
+        gc.strokeLine(0, scaledY, canvasWidth, scaledY);
+        System.out.println(y);
+    }
+    
+    public double getScaledX(double x){
+        return canvasWidth/2d+x*SPACING;
+    }
+    
+    public double getScaledY(double y){
+        return canvasHeight/2d+y*(-SPACING);
     }
     
     public void reset(){

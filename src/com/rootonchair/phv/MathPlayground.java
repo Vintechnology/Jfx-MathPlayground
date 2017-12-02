@@ -23,15 +23,14 @@ import javafx.stage.Stage;
  * @author user
  */
 public class MathPlayground extends Application {
-    private EquationInterpret interpret;
+    private GraphDrawer graphDrawer;
     
     @Override
     public void start(Stage primaryStage) {
-        interpret=new EquationInterpret("0","x",0);
+        graphDrawer=new GraphDrawer();
         
         HBox canvasRoot=new HBox();
-        final CoordinateCanvas canvas=new CoordinateCanvas(420,420);
-        canvasRoot.getChildren().add(canvas);
+        canvasRoot.getChildren().add(graphDrawer.getCanvas());
         canvasRoot.setId("canvas_pane");
         
         final TextField equationField=new TextField();
@@ -45,17 +44,12 @@ public class MathPlayground extends Application {
         Button okButton=new Button("OK");
         okButton.setOnAction((ActionEvent event)->{
             String src=equationField.getText();
-            interpret.setSource(src);
-            for(int i=-100;i<=100;i++){
-                double x= i/10d;
-                double y=interpret.applyVariable(x);
-                
-                canvas.drawDot(x, y);
-            }
+            graphDrawer.setEquation(src);
+            graphDrawer.drawGraph();
         });
         Button resetButton=new Button("Reset");
         resetButton.setOnAction((ActionEvent event)->{
-            canvas.reset();
+            graphDrawer.erase();
         });
         buttonPane.getChildren().addAll(okButton,resetButton);
              
