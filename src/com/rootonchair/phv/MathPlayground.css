@@ -1,11 +1,11 @@
 
-.root{
+#root{
     -fx-background-color: #333333;
     -fx-alignment: CENTER;
     -fx-padding: 15;
 }
 
-.label{
+#label{
     -fx-text-fill: white;
 }
 
@@ -24,5 +24,6 @@
 
 #top_text{
     -fx-font: normal bold 20px 'monospace';
+    -fx-text-fill: white;
 }
 

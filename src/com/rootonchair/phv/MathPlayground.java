@@ -7,11 +7,14 @@ package com.rootonchair.phv;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -34,9 +37,27 @@ public class MathPlayground extends Application {
         canvasRoot.setId("canvas_pane");
         
         final TextField equationField=new TextField();
+        final ContextMenu contextMenu= new ContextMenu();
+        MenuItem copy=new MenuItem("Copy");
+        copy.setOnAction((ActionEvent event)->{
+            equationField.copy();
+        });
+        MenuItem cut=new MenuItem("Cut");
+        cut.setOnAction((ActionEvent event)->{
+            equationField.cut();
+        });
+        MenuItem paste=new MenuItem("Paste");
+        paste.setOnAction((ActionEvent event)->{
+            equationField.paste();
+        });
+        
+        contextMenu.getItems().addAll(cut,copy,paste);
+        equationField.setContextMenu(contextMenu);
+        
         Label topText=new Label("Welcome to Math Playground");
         topText.setId("top_text");
         Label equationText=new Label("Equation:");
+        equationText.setId("label");
         
         HBox buttonPane=new HBox();
         buttonPane.setAlignment(Pos.CENTER_RIGHT);
@@ -69,7 +90,7 @@ public class MathPlayground extends Application {
         
         HBox root=new HBox();
         root.getChildren().addAll(canvasRoot,controlRoot);
-        
+        root.setId("root");
         
         Scene scene=new Scene(root);
         scene.getStylesheets().add(MathPlayground.class.getResource("MathPlayground.css").toExternalForm());
