@@ -111,18 +111,25 @@ public class EquationInterpret {
 		nextChar();
             String functn=src.substring(startPos, this.pos);
             x=parseFactor();
-            if (functn.equals("sqrt"))
-		x=Math.sqrt(x);
-            else if(functn.equals("sin"))
-                x=Math.sin(Math.toRadians(x));
-            else if(functn.equals("cos"))
-		x=Math.cos(Math.toRadians(x));
-            else if(functn.equals("tan"))
-		x=Math.tan(Math.toRadians(x));
-            else if(functn.equals("cot"))
-		x=1/Math.tan(Math.toRadians(x));
-            else
-		throw new RuntimeException("Unknown function "+functn);
+            switch (functn) {
+                case "sqrt":
+                    x=Math.sqrt(x);
+                    break;
+                case "sin":
+                    x=Math.sin(Math.toRadians(x));
+                    break;
+                case "cos":
+                    x=Math.cos(Math.toRadians(x));
+                    break;
+                case "tan":
+                    x=Math.tan(Math.toRadians(x));
+                    break;
+                case "cot":
+                    x=1/Math.tan(Math.toRadians(x));
+                    break;
+                default:
+                    throw new RuntimeException("Unknown function "+functn);
+            }
 	}else
             throw new RuntimeException("Unexpected character "+(char)ch);
 		
