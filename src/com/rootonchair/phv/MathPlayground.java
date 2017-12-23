@@ -5,25 +5,22 @@
  */
 package com.rootonchair.phv;
 
+import com.rootonchair.phv.EquationInterpret.UnexpectedCharacterException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -66,6 +63,9 @@ public class MathPlayground extends Application {
         Label equationText=new Label("Equation:");
         equationText.setId("label");
         
+        Text errorText=new Text();
+        errorText.setFill(Color.FIREBRICK);
+        
         HBox buttonPane=new HBox();
         buttonPane.setAlignment(Pos.CENTER_RIGHT);
         buttonPane.setSpacing(10);
@@ -73,10 +73,17 @@ public class MathPlayground extends Application {
         okButton.setOnAction((ActionEvent event)->{
             String src=equationField.getText();
             graphDrawer.setEquation(src);
-            graphDrawer.drawGraph();
+            errorText.setText("");
+            try{
+                graphDrawer.drawGraph();
+            } catch(UnexpectedCharacterException ex){
+                errorText.setText("* "+ex.getMessage());
+            }
         });
         Button resetButton=new Button("Reset");
         resetButton.setOnAction((ActionEvent event)->{
+            equationField.clear();
+            errorText.setText("");
             graphDrawer.erase();
         });
         buttonPane.getChildren().addAll(okButton,resetButton);
@@ -88,6 +95,7 @@ public class MathPlayground extends Application {
         controlPane.add(equationText, 0, 0);
         controlPane.add(equationField,1,0);
         controlPane.add(buttonPane, 1, 2);
+        controlPane.add(errorText, 1, 3);
         
         VBox controlRoot=new VBox();
         controlRoot.setSpacing(10);

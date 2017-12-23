@@ -50,7 +50,7 @@ public class EquationInterpret {
             return 0;
 	double x= parseExpression();
 	if(this.pos<src.length()) 
-            throw new RuntimeException("Unexpected character "+(char)ch);
+            throw new UnexpectedCharacterException("Unexpected character \""+(char)ch+"\"");
         if(!Double.isInfinite(x)){
             isPositive = Double.compare(x, 0d)>=0;
         }
@@ -100,12 +100,22 @@ public class EquationInterpret {
 	int startPos=this.pos;
 	if(eat('(')){
             x=parseExpression();
-	if(!eat(')'))
-            throw new RuntimeException("Cannot find \")\" ");// TODO: catch exception if can't find ')'
-	}else if(ch>='0'&& ch<='9' || ch=='.'){
+            if(!eat(')'))
+                throw new UnexpectedCharacterException("Cannot find \")\" ");
+	}else if(eat('|')){
+            x=parseExpression();
+            if(!eat('|'))
+                throw new UnexpectedCharacterException("Cannot find \"|\" ");
+            x=Math.abs(x);
+            
+        }else if(ch>='0'&& ch<='9' || ch=='.'){
             while(ch>='0'&& ch<='9' || ch=='.')
 		nextChar();
+            try{
 		x=Double.parseDouble(src.substring(startPos, this.pos));
+            }catch(NumberFormatException ex){
+                throw new UnexpectedCharacterException("Cannot resolve equation");
+            }
 	}else if (ch>='a' && ch<='z'){
             while(ch>='a' && ch<='z')
 		nextChar();
@@ -128,15 +138,28 @@ public class EquationInterpret {
                     x=1/Math.tan(Math.toRadians(x));
                     break;
                 default:
-                    throw new RuntimeException("Unknown function "+functn);
+                    throw new UnexpectedCharacterException("Unknown function \""+functn+"\"");
             }
-	}else
-            throw new RuntimeException("Unexpected character "+(char)ch);
+	}else{
+            if(ch!=-1)
+                throw new UnexpectedCharacterException("Unexpected character \""+(char)ch+"\"");
+            else
+                throw new UnexpectedCharacterException("Cannot resolve equation");
+                
+        }
 		
 	if(eat('^')){
             double y=parseFactor();
             x=Math.pow(x, y);
 	}
 	return x;
+    }
+    
+    public class UnexpectedCharacterException extends RuntimeException{
+
+        public UnexpectedCharacterException(String message) {
+            super(message);
+        }
+        
     }
 }
